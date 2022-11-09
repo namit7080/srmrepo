@@ -1,0 +1,23 @@
+{
+  "name": "srm",
+  "version": "1.0.0",
+  "description": "education",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "all",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^3.2.4",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "ejs": "^3.1.8",
+    "express": "^4.18.2",
+    "google-search-results-nodejs": "^2.1.0",
+    "mongoose": "^6.7.0",
+    "nodemailer": "^6.8.0",
+    "otp-generators": "^1.0.3",
+    "path": "^0.12.7"
+  }
+}
