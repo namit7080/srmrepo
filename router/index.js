@@ -1,9 +1,9 @@
 const express= require('express');
-const Researchpaper = require('../model/Research');
+// const Researchpaper = require('../model/Research');
 
 const router= express.Router();
-const Explore= require('../controller/index');
-const Profile = require('../model/Profile');
+// const Explore= require('../controller/index');
+// const Profile = require('../model/Profile');
 const Interest= require('../controller/interest');
 const Filter= require('../controller/filter');
 const Getotp= require('../controller/getotp');
@@ -12,39 +12,39 @@ const api= require('../controller/api');
 
 
 
-router.post('/data',function(req,res){
+// router.post('/data',function(req,res){
 
-    console.log(req.body);
-    const name= req.body.paper;
-    const post=req.body.author;
-    const paper= req.body.department;
-    const department= req.body.journal;
-     const email=req.body.issn;
-    const password=req.body.journallink;
+//     console.log(req.body);
+//     const name= req.body.paper;
+//     const post=req.body.author;
+//     const paper= req.body.department;
+//     const department= req.body.journal;
+//      const email=req.body.issn;
+//     const password=req.body.journallink;
     
 
-     Profile.create({
-        name:name,
-        post:post,
+//      Profile.create({
+//         name:name,
+//         post:post,
        
-        department:department,
-        email:email,
-       password:password
+//         department:department,
+//         email:email,
+//        password:password
     
         
-     })
-     return res.json(200,{
-        message: "Created"
-    })
+//      })
+//      return res.json(200,{
+//         message: "Created"
+//     })
 
 
-})
+// })
 
 
-router.get('/explore',Explore.Explore);
-router.post('/exploredept',Explore.Different);
-router.post('/authors',Explore.Authors);
-router.post('/exploreprofile',Explore.ExplProfile);
+// router.get('/explore',Explore.Explore);
+// router.post('/exploredept',Explore.Different);
+// router.post('/authors',Explore.Authors);
+// router.post('/exploreprofile',Explore.ExplProfile);
 
 router.post('/api',api.save);
 
