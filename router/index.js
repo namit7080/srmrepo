@@ -6,14 +6,11 @@ const router= express.Router();
 // const Profile = require('../model/Profile');
 const Interest= require('../controller/interest');
 const Filter= require('../controller/filter');
-const Getotp= require('../controller/getotp');
+
 
 const api= require('../controller/api');
 
-
-
 // router.post('/data',function(req,res){
-
 //     console.log(req.body);
 //     const name= req.body.paper;
 //     const post=req.body.author;
@@ -54,19 +51,20 @@ router.get('/citation',Filter.highCitation);
 
 router.post('/yearbetween',Filter.yearbetween);
 
-router.post('/getotp',Getotp.getotp);
+
 
 // searching author on the department basis
-router.post('/department',Filter.departmentbasis);
+router.get('/department',Filter.departmentbasis);
 
 // search author detail by click on it
-router.post('/authordetail',Filter.authorinfo);
+router.get('/authordetail',Filter.authorinfo);
 
 // search all paper of particular author
-router.post('/allpaper',Filter.allpaper);
+router.get('/allpaper',Filter.allpaper);
 
+// search for interest
 
-
+router.get('/interest',Filter.sameinterest);
 
 
 

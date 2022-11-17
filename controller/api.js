@@ -4,7 +4,7 @@ const Interest = require("../model/Interest");
 const Paper = require("../model/Researchpaper");
 const Table = require("../model/table");
 const UserID = require("../model/userid");
-const OTP = require("../model/otp");
+
 
 const Singup = require("../model/singup");
 const SerpApi = require("google-search-results-nodejs");
@@ -18,7 +18,7 @@ var scholarurlname="";
 var srmidname="";
 var emailname="";
 var passwordname="";
-var otpname="";
+var post="";
 
 const search = new SerpApi.GoogleSearch(
   "ab1e180ec0a12feafffa41b431c3088ef3e771dc5bb2febbd3070aa1a287df78"
@@ -46,6 +46,11 @@ const callback = async function (data) {
     const i10_index = tables.table[2].i10_index.all;
     const graph = tables.graph;
    // console.log(scholarurlname+" yy");
+     
+   departmentname=departmentname.trim();
+   departmentname=departmentname.toUpperCase();
+   post=post.trim();
+   post=post.toUpperCase();
 
     const singupaccount= await Singup.create({
       first:firstname,
@@ -65,6 +70,8 @@ const callback = async function (data) {
           name: name,
           affliation: affiliation,
           profilepic: picurl,
+          department:departmentname,
+          post:post
         },
         async function (err, profile) {
           if (err) {
@@ -139,8 +146,10 @@ const callback = async function (data) {
                 });
               }
               graphtable.save();
-              profile.save();
+             
               singupaccount.info=profile;
+              profile.singup=singupaccount;
+              profile.save();
               singupaccount.save();
               //  singup.info=profile;
               //  singup.save();
@@ -195,7 +204,7 @@ module.exports.save = async function (req, res) {
   let srmid = req.body.smrid;
   let email = req.body.email;
   let password = req.body.password;
-  let otp = req.body.otp;
+  let postrank = req.body.post;
  
   if (
     !first ||
@@ -205,23 +214,13 @@ module.exports.save = async function (req, res) {
     !srmid ||
     !email ||
     !password ||
-    !otp
+    !postrank
   ) {
     return res.json(400, {
       message: "Incomplete Information",
     });
   }
-  let otptable = await OTP.findOne({ email: email });
-  if (!otptable) {
-    return res.json(400, {
-      message: "Invalid Credentail",
-    });
-  }
-  if (otptable.code !== otp) {
-    return res.json(400, {
-      message: "Invalid Credentail",
-    });
-  }
+  
   let present = await Singup.findOne({ email: email });
   if (present) {
     return res.json(200, {
@@ -235,7 +234,7 @@ module.exports.save = async function (req, res) {
   srmidname = srmidname;
   emailname = email;
   passwordname = password;
-  otpname = otp;
+  post=postrank;
   console.log(scholarurlname);
 
   UserID.create({ id: url }, function (err, userid) {});

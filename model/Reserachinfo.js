@@ -5,6 +5,10 @@ const research= new mongoose.Schema({
         type:String,
         
      },
+     department:{
+      type:String,
+      required:true,
+     },
      affliation:{
         type:String,
         
@@ -27,7 +31,14 @@ const research= new mongoose.Schema({
      },
      coauthor:[{
          type:Object
-     }]
+     }],
+     singup:{
+      type:mongoose.Schema.Types.ObjectId,
+      ref:'Singup'
+     },
+     post:{
+        type:String
+     }
 
 
 },{
