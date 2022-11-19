@@ -65,35 +65,77 @@ module.exports.departmentbasis = async function (req, res) {
     }
     const userid=[];
     if(type==="INTEREST"){
-          let sameinterest= await Interest.findOne({_id:department}).populate('user');
-        console.log(sameinterest.user[0]._id.toString());
+
+       // getting interest on the basis of id and populate user
+        let sameinterest= await Interest.findOne({_id:department}).populate('user');
+       
         for(let i=0;i<sameinterest.user.length;i++){
           userid.push(sameinterest.user[i]._id.toString());
         }
   
+        // get all paper of user
          const paper= await Paper.find({user:{ $in: userid}});
-         console.log(paper.length+" "+userid.length);
+         
          return res.json(200, {
           message: sameinterest,
           allpaper:paper
         });
 
     }
+    if(type==="RANGE"){
+        let index=department.indexOf("_");
+        let start = department.slice(0,index);
+        let end= department.slice(index+1);
+        const map = new Map();
+
+
+        // get all paper in between range
+        let between = await Paper.find({ publishyear: { $gt: start, $lt: end } });
+       
+
+        for(let i=0;i<between.length;i++){
+          
+            if(!map.get(between[i].user.toString())){
+                userid.push(between[i].user.toString());
+                console.log(between[i].user.toString());
+                map.set(between[i].user.toString(),true);
+            }
+        }
+
+        // get user of paper
+
+        let user = await Authorinfo.find({_id:{$in: userid}});
+
+
+        console.log(start+" "+end+" "+index);
+        return res.json(200, {
+          message: user,
+          allpaper:between
+        });
+
+
+
+
+    }
     let filter = department.trim().toUpperCase();
     console.log(filter);
+
+    // get author on the bais of department
     
     let allpaper = await Authorinfo.find({ department: filter }).exec();
     for(let i=0;i<allpaper.length;i++){
         userid.push(allpaper[i]._id);
     }
 
+    // get paper on the basis department
     const paper= await Paper.find({user:{ $in: userid}});
-    console.log(paper.length);
+   
 
     return res.json(200, {
       message: allpaper,
       allpaper:paper
     });
+
   } catch (e) {
     return res.json(500, {
       message: "Servor Error",
@@ -104,7 +146,7 @@ module.exports.departmentbasis = async function (req, res) {
 // search author detail by click on it
 module.exports.authorinfo = async function (req, res) {
   try {
-    console.log(req.params);
+   
     let id = req.query.id;
 
     
@@ -114,9 +156,11 @@ module.exports.authorinfo = async function (req, res) {
       });
     }
 
+    // get particular single author
     let info = await Authorinfo.findOne({ _id: id });
+    // get all paper
     let papers = await Paper.find({ user: id });
-    console.log(papers.length);
+    
     
 
     return res.json(200, {
