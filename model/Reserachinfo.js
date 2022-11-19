@@ -21,10 +21,7 @@ const research= new mongoose.Schema({
         type:String,
         
      }],
-     papers:[{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'Researchpapers'
-     }],
+    
      table:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'Table'

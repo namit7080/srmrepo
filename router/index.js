@@ -67,6 +67,11 @@ router.get('/allpaper',Filter.allpaper);
 router.get('/interest',Filter.sameinterest);
 
 
+// search paper
+
+router.get('/paper',Filter.serchpaper);
+
+
 
 
 module.exports=router;

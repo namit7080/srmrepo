@@ -56,31 +56,43 @@ module.exports.yearbetween = async function (req, res) {
 module.exports.departmentbasis = async function (req, res) {
   try {
     let department = req.query.id;
-     let type = req.query.type;
+    let type = req.query.type;
    
     if (!department||!type ) {
       return res.json(400, {
         message: "Invalid Request",
       });
     }
+    const userid=[];
     if(type==="INTEREST"){
-          let sameinterest= await Interest.find({_id:department}).populate({path:'user', populate:{
-          path:'papers'
-     }});
+          let sameinterest= await Interest.findOne({_id:department}).populate('user');
+        console.log(sameinterest.user[0]._id.toString());
+        for(let i=0;i<sameinterest.user.length;i++){
+          userid.push(sameinterest.user[i]._id.toString());
+        }
+  
+         const paper= await Paper.find({user:{ $in: userid}});
+         console.log(paper.length+" "+userid.length);
          return res.json(200, {
           message: sameinterest,
+          allpaper:paper
         });
 
     }
     let filter = department.trim().toUpperCase();
+    console.log(filter);
     
-    let allpaper = await Authorinfo.find({ department: filter }).populate(
-      "papers"
-    );
+    let allpaper = await Authorinfo.find({ department: filter }).exec();
+    for(let i=0;i<allpaper.length;i++){
+        userid.push(allpaper[i]._id);
+    }
 
+    const paper= await Paper.find({user:{ $in: userid}});
+    console.log(paper.length);
 
     return res.json(200, {
       message: allpaper,
+      allpaper:paper
     });
   } catch (e) {
     return res.json(500, {
@@ -95,7 +107,7 @@ module.exports.authorinfo = async function (req, res) {
     console.log(req.params);
     let id = req.query.id;
 
-    console.log(id);
+    
     if (!id) {
       return res.json(400, {
         message: "Invalid Request",
@@ -104,6 +116,7 @@ module.exports.authorinfo = async function (req, res) {
 
     let info = await Authorinfo.findOne({ _id: id });
     let papers = await Paper.find({ user: id });
+    console.log(papers.length);
     
 
     return res.json(200, {
@@ -160,6 +173,40 @@ module.exports.sameinterest= async function(req,res){
       message: "Servor Error"
     });
   }
+
+
+}
+
+// search paper
+
+module.exports.serchpaper= async function(req,res){
+
+    try{
+
+
+      let payload=await req.query.id.trim();
+
+      if(!payload){
+        return res.json(400, {
+          message: "Invalid Request",
+        });
+      }
+
+
+       let interest=await Paper.find({ tittle:{$regex: new RegExp('^'+payload+'.*','i')}}).exec();
+
+       console.log(interest);
+       return res.json(200, {
+        message:interest,
+      });
+
+    }
+    catch(e){
+      return res.json(500, {
+        message: "Servor Error"
+      });
+    }
+
 
 
 }

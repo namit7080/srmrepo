@@ -118,7 +118,7 @@ const callback = async function (data) {
                 } else {
                   paperc.user = profile;
                   paperc.save();
-                  profile.papers.push(paperc);
+                 
                 }
               }
             );
@@ -151,8 +151,7 @@ const callback = async function (data) {
               profile.singup=singupaccount;
               profile.save();
               singupaccount.save();
-              //  singup.info=profile;
-              //  singup.save();
+              
             }
           );
         }
