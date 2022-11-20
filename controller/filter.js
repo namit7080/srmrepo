@@ -329,7 +329,7 @@ module.exports.differentsearch = async function (req, res) {
 }
 catch(e){
   return res.json(500, {
-    message: "Server Error",
+    message: "Server erroe",
   });
 }
  
