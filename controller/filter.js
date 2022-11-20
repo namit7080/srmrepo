@@ -56,7 +56,7 @@ module.exports.yearbetween = async function (req, res) {
 module.exports.departmentbasis = async function (req, res) {
   try {
     let department = req.query.id;
-    let type = req.query.type;
+    let type = req.query.departType?.toUpperCase();
 
     if (!department || !type) {
       return res.json(400, {
@@ -64,7 +64,7 @@ module.exports.departmentbasis = async function (req, res) {
       });
     }
     const userid = [];
-    if (type === "INTEREST") {
+    if (type==="AREA OF INTEREST") {
       // getting interest on the basis of id and populate user
       //
       let name = department.trim().toUpperCase();
@@ -77,26 +77,27 @@ module.exports.departmentbasis = async function (req, res) {
       }
 
       // get all paper of user
-      const paper = await Paper.find({ user: { $in: userid } });
+      let paper = await Paper.find({ user: { $in: userid } });
+      let user = await Authorinfo.find({_id:{$in: userid}});
 
       return res.json(200, {
-        message: sameinterest,
+        message: user,
         allpaper: paper,
       });
     }
-    if (type === "RANGE") {
-      let index = department.indexOf("_");
-      let start = department.slice(0, index);
-      let end = department.slice(index + 1);
+    if (type==="YEAR") {
+      let index=department.split("-");
+      let start = Number(index[0])-1;
+      let end= Number(index[1])+1;
       const map = new Map();
 
       // get all paper in between range
-      let between = await Paper.find({ publishyear: { $gt: start, $lt: end } });
+      let between = await Paper.find({ publishyear: { $gt: Number(start), $lt: Number(end) } });
 
       for (let i = 0; i < between.length; i++) {
         if (!map.get(between[i].user.toString())) {
           userid.push(between[i].user.toString());
-          console.log(between[i].user.toString());
+          
           map.set(between[i].user.toString(), true);
         }
       }
@@ -105,14 +106,14 @@ module.exports.departmentbasis = async function (req, res) {
 
       let user = await Authorinfo.find({ _id: { $in: userid } });
 
-      console.log(start + " " + end + " " + index);
+      
       return res.json(200, {
         message: user,
         allpaper: between,
       });
     }
     let filter = department.trim().toUpperCase();
-    console.log(filter);
+    
 
     // get author on the bais of department
 
@@ -171,8 +172,8 @@ module.exports.allpaper = async function (req, res) {
   try {
     let paper = await Paper.find({}).sort({ cited: -1 }).populate("user");
 
-    if (paper.length > 2) {
-      paper = paper.slice(0, 2);
+    if (paper.length > 3) {
+      paper = paper.slice(0, 3);
     }
     return res.json(200, {
       message: paper,
@@ -234,10 +235,10 @@ module.exports.differentsearch = async function (req, res) {
 
   try{
   let id = req.query.id;
-  let type = req.query.type;
+  let type = req.query.departType?.toUpperCase();
 
   let payload = req.query.p;
-  if(!id||!type||!payload){
+  if(!id||!type){
     return res.json(400, {
       message: "Invalid Request",
     });
@@ -270,7 +271,7 @@ module.exports.differentsearch = async function (req, res) {
 
    
   }
-  if(type==="INTEREST"){
+  if(type==="AREA OF INTEREST"){
     let name = id.trim().toUpperCase();
       let sameinterest = await Interest.findOne({ tittle: name }).populate(
         "user"
@@ -290,10 +291,10 @@ module.exports.differentsearch = async function (req, res) {
       });
       
   }
-  if(type==="RANGE"){
-    let index = id.indexOf("_");
-    let start = id.slice(0, index);
-    let end = id.slice(index + 1);
+  if(type==="YEAR"){
+    let index=id.split("-");
+    let start = Number(index[0])-1;
+    let end= Number(index[1])+1;
 
     if(!index||!start||!end){
 
@@ -302,7 +303,7 @@ module.exports.differentsearch = async function (req, res) {
     const map = new Map();
 
     // get all paper in between range
-    let between = await Paper.find({ publishyear: { $gt: start, $lt: end } });
+    let between = await Paper.find({ publishyear: { $gt: Number(start), $lt: Number(end) } });
 
     for (let i = 0; i < between.length; i++) {
       if (!map.get(between[i].user.toString())) {
@@ -328,6 +329,7 @@ module.exports.differentsearch = async function (req, res) {
   }
 }
 catch(e){
+  console.log(e);
   return res.json(500, {
     message: "Server erroe",
   });

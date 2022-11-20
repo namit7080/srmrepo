@@ -2,7 +2,7 @@ const mongoose= require('mongoose');
 const global='mongodb+srv://namit:teb6kwTYWhcF6cBK@cluster0.dfpjy9p.mongodb.net/srmdata?retryWrites=true&w=majority'
 
 const DB1='mongodb://localhost/srmdb';
-mongoose.connect(DB1);
+mongoose.connect(global);
 const db= mongoose.connection;
 
 db.on('error',console.error.bind(console,'Error Connecting to Database'));
