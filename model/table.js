@@ -15,7 +15,8 @@ const table= new mongoose.Schema({
      }],
      author:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'Researchinfo'
+        ref:'Researchinfo',
+        unique:true
      }
 
 

@@ -19,6 +19,7 @@ var srmidname="";
 var emailname="";
 var passwordname="";
 var post="";
+var googleurl="";
 
 const search = new SerpApi.GoogleSearch(
   "ab1e180ec0a12feafffa41b431c3088ef3e771dc5bb2febbd3070aa1a287df78"
@@ -45,7 +46,7 @@ const callback = async function (data) {
     const h_index = tables.table[1].h_index.all;
     const i10_index = tables.table[2].i10_index.all;
     const graph = tables.graph;
-   // console.log(scholarurlname+" yy");
+    console.log(paper.length+" yy");
      
    departmentname=departmentname.trim();
    departmentname=departmentname.toUpperCase();
@@ -71,7 +72,9 @@ const callback = async function (data) {
           affliation: affiliation,
           profilepic: picurl,
           department:departmentname,
-          post:post
+          post:post,
+          scholarurl:googleurl,
+          totalpaper:paper.length
         },
         async function (err, profile) {
           if (err) {
@@ -234,15 +237,17 @@ module.exports.save = async function (req, res) {
   emailname = email;
   passwordname = password;
   post=postrank;
-  console.log(scholarurlname);
+  googleurl=scholarurl;
 
   UserID.create({ id: url }, function (err, userid) {});
+  
  search.json(params, callback);
   return res.json(200, {
     message: "Success",
   });
   }
   catch(e){
+    console.log(e);
     return res.json(200, {
       message: "Invalid",
     });

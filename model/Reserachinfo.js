@@ -21,7 +21,12 @@ const research= new mongoose.Schema({
         type:String,
         
      }],
-    
+     scholarurl:{
+      type:String,
+     },
+     totalpaper:{
+        type:Number,
+     },
      table:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'Table'

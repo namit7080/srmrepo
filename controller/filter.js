@@ -67,7 +67,9 @@ module.exports.departmentbasis = async function (req, res) {
     if(type==="INTEREST"){
 
        // getting interest on the basis of id and populate user
-        let sameinterest= await Interest.findOne({_id:department}).populate('user');
+       // 
+       let name = department.trim().toUpperCase();
+        let sameinterest= await Interest.findOne({tittle:name}).populate('user');
        
         for(let i=0;i<sameinterest.user.length;i++){
           userid.push(sameinterest.user[i]._id.toString());
@@ -160,12 +162,16 @@ module.exports.authorinfo = async function (req, res) {
     let info = await Authorinfo.findOne({ _id: id });
     // get all paper
     let papers = await Paper.find({ user: id });
+    // get table
+    let table= await Table.findOne({author:id});
+
     
     
 
     return res.json(200, {
       message: info,
       paper: papers,
+      table:table
     });
   } catch (e) {
     return res.json(500, {
@@ -178,16 +184,13 @@ module.exports.authorinfo = async function (req, res) {
 
 module.exports.allpaper = async function (req, res) {
   try {
-    let id = req.query.userid;
-    if (!id) {
-      return res.json(400, {
-        message: "Invalid Request",
-      });
+    
+    let paper = await Paper.find({}).sort({cited:-1}).populate('user');
+
+    if(paper.length>2){
+        paper=paper.slice(0,2);
     }
-
-    let paper = await Paper.find({ user: id });
-
-    return res.json(200, {
+     return res.json(200, {
       message: paper,
     });
   } catch (e) {

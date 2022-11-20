@@ -59,8 +59,8 @@ router.get('/department',Filter.departmentbasis);
 // search author detail by click on it
 router.get('/authordetail',Filter.authorinfo);
 
-// search all paper of particular author
-router.get('/allpaper',Filter.allpaper);
+// search 2 paper on the basis citation
+router.get('/highpaper',Filter.allpaper);
 
 // search for interest
 
