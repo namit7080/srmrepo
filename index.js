@@ -19,6 +19,6 @@ app.listen(port,function(err){
         return;
     }
     else{
-        console.log("Server is running fine");
+        console.log("Server is running Fine");
     }
 })

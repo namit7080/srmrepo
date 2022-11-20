@@ -71,6 +71,10 @@ router.get('/interest',Filter.sameinterest);
 
 router.get('/paper',Filter.serchpaper);
 
+// different search
+
+router.get('/different',Filter.differentsearch);
+
 
 
 
