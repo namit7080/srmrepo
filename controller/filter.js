@@ -3,6 +3,7 @@ const Paper = require("../model/Researchpaper");
 const Author = require("../model/singup");
 const Authorinfo = require("../model/Reserachinfo");
 const Interest = require("../model/Interest");
+const Department= require('../model/department');
 
 module.exports.highCitation = async function (req, res) {
   // sort on the basis of Citation
@@ -245,32 +246,32 @@ module.exports.differentsearch = async function (req, res) {
   }
   const userid = [];
 
-  if (type === "DEPARTMENT") {
-    let newid = id.trim().toUpperCase();
+  // if (type === "DEPARTMENT") {
+  //   let newid = id.trim().toUpperCase();
 
-    let author = await Authorinfo.find({ department: newid }).exec();
+  //   let author = await Authorinfo.find({ department: newid }).exec();
 
-    for (let i = 0; i < author.length; i++) {
-      userid.push(author[i]._id);
-    }
+  //   for (let i = 0; i < author.length; i++) {
+  //     userid.push(author[i]._id);
+  //   }
 
-    // get paper on the basis department
-    let paper = await Paper.find({
-      user: { $in: userid },
-      tittle: { $regex: new RegExp("^" + ".*" + payload + ".*", "i") },
-    }).exec();
-    let auth = await Authorinfo.find({
-      department: newid,
-      name: { $regex: new RegExp("^" + ".*" + payload + ".*", "i") },
-    }).exec();
+  //   // get paper on the basis department
+  //   let paper = await Paper.find({
+  //     user: { $in: userid },
+  //     tittle: { $regex: new RegExp("^" + ".*" + payload + ".*", "i") },
+  //   }).exec();
+  //   let auth = await Authorinfo.find({
+  //     department: newid,
+  //     name: { $regex: new RegExp("^" + ".*" + payload + ".*", "i") },
+  //   }).exec();
 
-    return res.json(200, {
-      message: auth,
-      allpaper:paper
-    });
+  //   return res.json(200, {
+  //     message: auth,
+  //     allpaper:paper
+  //   });
 
    
-  }
+  // }
   if(type==="AREA OF INTEREST"){
     let name = id.trim().toUpperCase();
       let sameinterest = await Interest.findOne({ tittle: name }).populate(
@@ -322,11 +323,35 @@ module.exports.differentsearch = async function (req, res) {
       allpaper:paper
     });
   }
-  else{
-    return res.json(400, {
-      message: "Invalid Request",
+  let newid = id.trim().toUpperCase();
+
+    let author = await Authorinfo.find({ department: newid }).exec();
+
+    for (let i = 0; i < author.length; i++) {
+      userid.push(author[i]._id);
+    }
+
+    // get paper on the basis department
+    let paper = await Paper.find({
+      user: { $in: userid },
+      tittle: { $regex: new RegExp("^" + ".*" + payload + ".*", "i") },
+    }).exec();
+    let auth = await Authorinfo.find({
+      department: newid,
+      name: { $regex: new RegExp("^" + ".*" + payload + ".*", "i") },
+    }).exec();
+
+    return res.json(200, {
+      message: auth,
+      allpaper:paper
     });
-  }
+
+
+  // else{
+  //   return res.json(400, {
+  //     message: "Invalid Request",
+  //   });
+  // }
 }
 catch(e){
   console.log(e);
@@ -336,3 +361,22 @@ catch(e){
 }
  
 };
+
+
+module.exports.alldepartment= async function(req,res){
+
+  try{
+     let alldepartment= await Department.find({});
+     return res.json(500, {
+      message: alldepartment,
+    });
+
+
+  }
+  catch(e){
+    return res.json(500, {
+      message: "Server erroe",
+    });
+
+  }
+}

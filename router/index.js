@@ -76,6 +76,9 @@ router.get('/paper',Filter.serchpaper);
 router.get('/different',Filter.differentsearch);
 
 
+router.get('/alldepartment',Filter.alldepartment);
+
+
 
 
 module.exports=router;

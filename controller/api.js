@@ -4,6 +4,7 @@ const Interest = require("../model/Interest");
 const Paper = require("../model/Researchpaper");
 const Table = require("../model/table");
 const UserID = require("../model/userid");
+const Department= require('../model/department');
 
 const Singup = require("../model/singup");
 const SerpApi = require("google-search-results-nodejs");
@@ -16,7 +17,7 @@ var departmentname = "";
 var scholarurlname = "";
 var srmidname = "";
 var emailname = "";
-var passwordname = "";
+
 var post = "";
 var googleurl = "";
 
@@ -44,14 +45,30 @@ const callback = async function (data) {
     departmentname = departmentname.toUpperCase();
     post = post.trim();
     post = post.toUpperCase();
+
+    let mydepartment=await Department.findOne({department:departmentname});
+
+    if(!mydepartment){
+       await Department.create({
+         department:departmentname,
+         paper:paper.length
+       })
+
+    }
+    else{
+
+         mydepartment.paper=mydepartment.paper+paper.length;
+         mydepartment.save();
+    }
    
+    
 
     const singupaccount = await Singup.create({
       
       department: departmentname,
       scholarurl: scholarurlname,
       email: emailname,
-      password: passwordname,
+      
     });
 
     // ,async function (singerr, singup) {
@@ -156,6 +173,7 @@ const callback = async function (data) {
 
 module.exports.save = async function (req, res) {
   try {
+   
     const str = req.body.url;
     var start = 0;
     var end = 0;
@@ -176,29 +194,23 @@ module.exports.save = async function (req, res) {
       num: "100",
     };
 
-    // if(!req.body.firstname||req.body.lastname||req.body.department||req.body.scholarurl||req.body.smrid||req.body.email||req.body.password||req.body.otp){
-    //   return res.json(400, {
-    //     message: "Invalid",
-    //   });
-    // }
-
-    // let first = req.body.firstname;
-    // let second = req.body.lastname;
+    
+   
     let department = req.body.department;
     let scholarurl = req.body.url;
     let srmid = req.body.smrid;
     let email = req.body.email;
-    let password = req.body.password;
+  
     let postrank = req.body.post;
 
     if (
     
-      !department ||
-      !scholarurl ||
-      !srmid ||
-      !email ||
-      !password ||
-      !postrank
+      !(department &&
+      scholarurl &&
+      srmid &&
+      email &&
+     
+      postrank)
     ) {
       return res.json(400, {
         message: "Incomplete Information",
@@ -211,13 +223,11 @@ module.exports.save = async function (req, res) {
         message: "Login Please",
       });
     }
-    // firstname = first;
-    // secondname = second;
+   
     departmentname = department;
     scholarurlname = scholarurl;
     srmidname = srmidname;
     emailname = email;
-    passwordname = password;
     post = postrank;
     googleurl = scholarurl;
 
