@@ -2,14 +2,7 @@ const mongoose= require('mongoose');
 const bycrypt= require('bcryptjs');
 
 const sing= new mongoose.Schema({
-   first:{
-       type:String,
-       required:true,
-   },
-   lastname:{
-      type:String,
-      required:true,
-   },
+  
    department:{
     type:String,
     required:true,

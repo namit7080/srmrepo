@@ -10,8 +10,8 @@ const SerpApi = require("google-search-results-nodejs");
 const router = require("../router");
 var url = 0;
 
-var firstname = "";
-var secondname = "";
+// var firstname = "";
+// var secondname = "";
 var departmentname = "";
 var scholarurlname = "";
 var srmidname = "";
@@ -44,10 +44,10 @@ const callback = async function (data) {
     departmentname = departmentname.toUpperCase();
     post = post.trim();
     post = post.toUpperCase();
+   
 
     const singupaccount = await Singup.create({
-      first: firstname,
-      lastname: secondname,
+      
       department: departmentname,
       scholarurl: scholarurlname,
       email: emailname,
@@ -142,13 +142,14 @@ const callback = async function (data) {
             profile.singup = singupaccount;
             profile.save();
             singupaccount.save();
+
           }
         );
       }
     );
 
     // });
-  } catch (e) {}
+  } catch (e) {console.log(e);}
 };
 
 // Show result as JSON
@@ -181,18 +182,17 @@ module.exports.save = async function (req, res) {
     //   });
     // }
 
-    let first = req.body.firstname;
-    let second = req.body.lastname;
+    // let first = req.body.firstname;
+    // let second = req.body.lastname;
     let department = req.body.department;
-    let scholarurl = req.body.scholarurl;
+    let scholarurl = req.body.url;
     let srmid = req.body.smrid;
     let email = req.body.email;
     let password = req.body.password;
     let postrank = req.body.post;
 
     if (
-      !first ||
-      !second ||
+    
       !department ||
       !scholarurl ||
       !srmid ||
@@ -211,8 +211,8 @@ module.exports.save = async function (req, res) {
         message: "Login Please",
       });
     }
-    firstname = first;
-    secondname = second;
+    // firstname = first;
+    // secondname = second;
     departmentname = department;
     scholarurlname = scholarurl;
     srmidname = srmidname;
