@@ -8,13 +8,14 @@ var cors = require('cors');
 
 
 
-app.use(cors());
+
 
 app.use(express.json())
 
 app.use('/',require('./router'));
 app.use(express.json({}));
 app.use(BodyParser.json());
+app.use(cors());
 
 app.listen(port,function(err){
     if(err){
