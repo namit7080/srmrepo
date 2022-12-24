@@ -151,7 +151,7 @@ module.exports.authorinfo = async function (req, res) {
     // get particular single author
     let info = await Authorinfo.findOne({ _id: id });
     // get all paper
-    let papers = await Paper.find({ user: id });
+    let papers = await Paper.find({ user: id }).sort({ cited: -1 });
     // get table
     let table = await Table.findOne({ author: id });
 
