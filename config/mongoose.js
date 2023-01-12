@@ -1,5 +1,5 @@
 const mongoose= require('mongoose');
-const global='mongodb+srv://namit:teb6kwTYWhcF6cBK@cluster0.dfpjy9p.mongodb.net/srmdata?retryWrites=true&w=majority'
+const global='mongodb+srv://puneet:bNtD1yFx5pj3IpA6@cluster0.i1ilmx0.mongodb.net/srmrepo?retryWrites=true&w=majority'
 
 const DB1='mongodb://localhost/srmdb';
 mongoose.connect(global);
